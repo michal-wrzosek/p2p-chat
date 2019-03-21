@@ -1,21 +1,25 @@
 {
-  "name": "rollup-starter-lib",
-  "version": "1.0.0",
-  "main": "dist/how-long-till-lunch.cjs.js",
-  "module": "dist/how-long-till-lunch.esm.js",
-  "browser": "dist/how-long-till-lunch.umd.js",
-  "dependencies": {
-    "ms": "^2.0.0"
+  "name": "react-component-lib",
+  "version": "0.1.0",
+  "main": "dist/react-component-lib.cjs.js",
+  "module": "dist/react-component-lib.esm.js",
+  "repository": {
+    "url": "https://github.com/michal-wrzosek/react-component-lib",
+    "type": "git"
   },
+  "license": "MIT",
   "devDependencies": {
-    "@types/ms": "^0.7.30",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.3",
     "rollup": "^1.0.0",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-typescript": "^1.0.0",
     "ts-node": "^7.0.1",
     "tslib": "^1.9.3",
     "typescript": "^3.2.2"
+  },
+  "peerDependencies": {
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
   },
   "scripts": {
     "build": "rollup -c",
