@@ -1,29 +1,40 @@
 {
   "name": "react-component-lib",
   "version": "0.1.0",
-  "main": "dist/react-component-lib.cjs.js",
-  "module": "dist/react-component-lib.esm.js",
+  "main": "dist/reactComponentLib.cjs.js",
+  "module": "dist/reactComponentLib.esm.js",
   "repository": {
     "url": "https://github.com/michal-wrzosek/react-component-lib",
     "type": "git"
   },
   "license": "MIT",
+  "types": "dist/reactComponentLib.d.ts",
   "devDependencies": {
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.3",
+    "@types/styled-components": "^4.1.12",
+    "concurrently": "^4.1.0",
+    "prepend-file": "^1.3.1",
     "rollup": "^1.0.0",
-    "rollup-plugin-typescript": "^1.0.0",
+    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-typescript2": "^0.20.1",
     "ts-node": "^7.0.1",
     "tslib": "^1.9.3",
     "typescript": "^3.2.2"
   },
   "peerDependencies": {
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "styled-components": "^4.1.3"
   },
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build-watch": "rollup -c -w",
+    "install-all": "npm i && cd example && npm i",
+    "start-example": "cd example && npm start",
+    "dev": "concurrently --kill-others \"npm run build-watch\" \"npm run start-example\"",
     "test": "ts-node test/test.ts",
     "pretest": "npm run build"
   },
