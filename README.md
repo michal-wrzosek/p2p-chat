@@ -2,6 +2,9 @@
 
 This is a boilerplate repository for creating npm packages with React components written in TypeScript and using styled-components.
 
+Medium article explaining step by step how to use this repo to publish your own library to NPM:
+https://medium.com/@xfor/developing-publishing-react-component-library-to-npm-styled-components-typescript-cc8274305f5a
+
 ## Installation:
 
 To install all dependencies run `npm run install-all`.
