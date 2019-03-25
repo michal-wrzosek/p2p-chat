@@ -1,8 +1,8 @@
 {
   "name": "react-component-lib",
   "version": "0.1.0",
-  "main": "dist/reactComponentLib.cjs.js",
-  "module": "dist/reactComponentLib.esm.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "repository": {
     "url": "https://github.com/michal-wrzosek/react-component-lib",
     "type": "git"

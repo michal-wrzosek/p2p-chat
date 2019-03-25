@@ -23,5 +23,3 @@ yarn-debug.log*
 yarn-error.log*
 
 /src/reactComponentLib
-/src/reactComponentLib.d.ts
-/src/reactComponentLib.js

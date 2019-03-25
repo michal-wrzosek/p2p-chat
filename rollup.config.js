@@ -3,7 +3,7 @@ import pkg from "./package.json";
 
 export default [
   {
-    input: "src/reactComponentLib.ts",
+    input: "src/index.ts",
     external: Object.keys(pkg.peerDependencies || {}),
     plugins: [
       typescript({
@@ -14,7 +14,7 @@ export default [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" },
       {
-        file: "example/src/reactComponentLib.js",
+        file: "example/src/reactComponentLib/index.js",
         format: "es",
         banner: "/* eslint-disable */"
       }
