@@ -1,6 +1,6 @@
 {
   "name": "react-component-lib",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "repository": {
@@ -8,7 +8,7 @@
     "type": "git"
   },
   "license": "MIT",
-  "types": "dist/reactComponentLib.d.ts",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.3",
