@@ -13,8 +13,15 @@
     "@types/react": "^16.8.25",
     "@types/react-dom": "^16.8.5",
     "@types/styled-components": "^4.1.18",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
     "concurrently": "^4.1.1",
+    "eslint": "^6.2.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
     "prepend-file": "^1.3.1",
+    "prettier": "^1.18.2",
     "rollup": "^1.19.4",
     "rollup-plugin-typescript2": "^0.22.1",
     "ts-node": "^8.3.0",
@@ -34,7 +41,9 @@
     "deploy-example": "cd example && npm run deploy",
     "dev": "concurrently --kill-others \"npm run build-watch\" \"npm run start-example\"",
     "test": "ts-node test/test.ts",
-    "pretest": "npm run build"
+    "pretest": "npm run build",
+    "test:lint": "eslint ./src/**/*.ts ./src/**/*.tsx ./example/src/**/*.ts ./example/src/**/*.tsx",
+    "test:lint:fix": "npm run test:lint -- --fix"
   },
   "files": [
     "dist"
