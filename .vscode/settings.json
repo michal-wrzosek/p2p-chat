@@ -14,19 +14,6 @@
     { "language": "typescript", "autoFix": true },
     { "language": "typescriptreact", "autoFix": true }
   ],
-  "editor.formatOnSave": true,
-  "[javascript]": {
-    "editor.formatOnSave": false
-  },
-  "[javascriptreact]": {
-    "editor.formatOnSave": false
-  },
-  "[typescript]": {
-    "editor.formatOnSave": false
-  },
-  "[typescriptreact]": {
-    "editor.formatOnSave": false
-  },
   "workbench.editor.enablePreview": false,
   "workbench.editor.enablePreviewFromQuickOpen": false
 }
