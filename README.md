@@ -8,7 +8,7 @@ To install all dependencies run `npm run install-all`.
 
 ## Developing your library:
 
-To start developing your library, run `npm run dev`. It will build your library and run example create-react-app where you can test your components. Each time you make changes to your library or example app, app will be reloaded to reflect your changes.
+To start developing your library, run `npm run dev`. It will build your library and run example create-react-app where you can test your library. Each time you make changes to your library or example app, app will be reloaded to reflect your changes.
 
 ## Typescript
 
