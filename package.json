@@ -35,7 +35,7 @@
     "start-example": "cd example && npm start",
     "deploy-example": "cd example && npm run deploy",
     "dev": "concurrently --kill-others \"npm run build-watch\" \"npm run start-example\"",
-    "test": "mocha -r ts-node/register ./src/**/*.spec.ts",
+    "test": "mocha -r ts-node/register ./test/**/*.spec.ts",
     "test:lint": "eslint ./src/**/*.ts ./src/**/*.tsx ./example/src/**/*.ts ./example/src/**/*.tsx",
     "test:lint:fix": "npm run test:lint -- --fix"
   },

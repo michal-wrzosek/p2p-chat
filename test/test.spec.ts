@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { test } from './test';
+import { test } from '../src/test';
 
 describe('test', () => {
   it('works', () => {
