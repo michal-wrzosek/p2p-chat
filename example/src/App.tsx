@@ -154,7 +154,7 @@ const App: React.FC = () => {
       {mode && isReady &&
         <Chat messages={textMessages} sendMessage={handleChatSendMessage} />
       }
-      <Version>v0.0.2</Version>
+      <Version>v0.0.3</Version>
     </Wrapper>
   );
 };
