@@ -157,7 +157,7 @@ const App: React.FC = () => {
         <Chat messages={textMessages} sendMessage={handleChatSendMessage} />
       }
       <Space size={24} />
-      <Version>v0.0.5</Version>
+      <Version>v0.0.6</Version>
     </Wrapper>
   );
 };
