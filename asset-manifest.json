@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/p2p-chat/static/css/main.795991f2.chunk.css",
-    "main.js": "/p2p-chat/static/js/main.6652d40e.chunk.js",
-    "main.js.map": "/p2p-chat/static/js/main.6652d40e.chunk.js.map",
+    "main.js": "/p2p-chat/static/js/main.3c1710b6.chunk.js",
+    "main.js.map": "/p2p-chat/static/js/main.3c1710b6.chunk.js.map",
     "runtime-main.js": "/p2p-chat/static/js/runtime-main.a6d0ffa9.js",
     "runtime-main.js.map": "/p2p-chat/static/js/runtime-main.a6d0ffa9.js.map",
     "static/css/2.e3f77e86.chunk.css": "/p2p-chat/static/css/2.e3f77e86.chunk.css",
     "static/js/2.698770ab.chunk.js": "/p2p-chat/static/js/2.698770ab.chunk.js",
     "static/js/2.698770ab.chunk.js.map": "/p2p-chat/static/js/2.698770ab.chunk.js.map",
     "index.html": "/p2p-chat/index.html",
-    "precache-manifest.ee6159e68d623458971b107f82acb502.js": "/p2p-chat/precache-manifest.ee6159e68d623458971b107f82acb502.js",
+    "precache-manifest.a96dee9f5ed24582b2b21f8f77bd3385.js": "/p2p-chat/precache-manifest.a96dee9f5ed24582b2b21f8f77bd3385.js",
     "service-worker.js": "/p2p-chat/service-worker.js",
     "static/css/2.e3f77e86.chunk.css.map": "/p2p-chat/static/css/2.e3f77e86.chunk.css.map",
     "static/css/main.795991f2.chunk.css.map": "/p2p-chat/static/css/main.795991f2.chunk.css.map"
