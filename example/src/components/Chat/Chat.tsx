@@ -1,7 +1,9 @@
 import React from 'react';
+import styled, { css } from 'styled-components';
+
 import { Input } from 'antd';
 import 'antd/es/input/style/css';
-import styled, { css } from 'styled-components';
+
 import { TextMessageType } from '../../types/TextMessageType';
 import { MESSAGE_SENDER } from '../../types/MessageSenderEnum';
 

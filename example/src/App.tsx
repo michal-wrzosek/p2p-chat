@@ -1,4 +1,8 @@
 import React from 'react';
+import styled from 'styled-components';
+import { Base64 } from 'js-base64';
+import copy from 'copy-to-clipboard';
+
 import { Input } from 'antd';
 import 'antd/es/input/style/css';
 import { Card } from 'antd';
@@ -7,15 +11,13 @@ import { Button } from 'antd';
 import 'antd/es/button/style/css';
 import { Typography } from 'antd';
 import 'antd/es/typography/style/css';
+
+import { Space } from './components/Space/Space';
 import { createPeerConnection } from './typescript-lib';
 import { Chat } from './components/Chat/Chat';
 import { MessageType } from './types/MessageType';
 import { MESSAGE_SENDER } from './types/MessageSenderEnum';
 import { MESSAGE_TYPE } from './types/MessageTypeEnum';
-import { Space } from './components/Space/Space';
-import styled from 'styled-components';
-import { Base64 } from 'js-base64';
-import copy from 'copy-to-clipboard';
 
 enum Mode {
   HOST = 'HOST',
@@ -154,7 +156,8 @@ const App: React.FC = () => {
       {mode && isReady &&
         <Chat messages={textMessages} sendMessage={handleChatSendMessage} />
       }
-      <Version>v0.0.3</Version>
+      <Space size={24} />
+      <Version>v0.0.4</Version>
     </Wrapper>
   );
 };

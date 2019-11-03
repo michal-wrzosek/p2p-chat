@@ -1,3 +1,3 @@
-import { createPeerConnection } from './test';
+import { createPeerConnection, CreatePeerConnectionProps, CreatePeerConnectionResponse } from './createPeerConnection';
 
-export { createPeerConnection };
+export { createPeerConnection, CreatePeerConnectionProps, CreatePeerConnectionResponse };

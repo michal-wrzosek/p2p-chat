@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 
-import { test } from '../src/test';
+// No test yet...
+// import { createPeerConnection } from '../src/createPeerConnection';
 
 describe('test', () => {
-  it('works', () => {
-    expect(test('something')).to.be.equal('test: something');
+  it('works but there are no real tests here yet', async () => {
+    expect(true).to.be.equal(true);
   });
 });
