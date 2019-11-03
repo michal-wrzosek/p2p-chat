@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "657f685655dbca84183e580cf959b448",
+    "revision": "07be06c4843f1a5a5438e39a3dd7d0d6",
     "url": "/p2p-chat/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/p2p-chat/static/css/2.47fdc5c0.chunk.css"
   },
   {
-    "revision": "c1c25aafd5a1f5025697",
+    "revision": "e02f557583cfb1e23543",
     "url": "/p2p-chat/static/css/main.795991f2.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/p2p-chat/static/js/2.e4371217.chunk.js"
   },
   {
-    "revision": "c1c25aafd5a1f5025697",
-    "url": "/p2p-chat/static/js/main.da06947c.chunk.js"
+    "revision": "e02f557583cfb1e23543",
+    "url": "/p2p-chat/static/js/main.90b8a155.chunk.js"
   },
   {
     "revision": "b4a4b98981acf000c6e7",
