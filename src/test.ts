@@ -17,7 +17,19 @@ export function createPeerConnection({
   onChannelOpen,
   onMessageReceived,
 }: CreatePeerConnectionProps): Promise<CreatePeerConnectionResponse> {
-  const peerConnection = new RTCPeerConnection();
+  const peerConnection = new RTCPeerConnection({
+    iceServers: [
+      {
+        urls: [
+          'stun.l.google.com:19302',
+          'stun1.l.google.com:19302',
+          'stun2.l.google.com:19302',
+          'stun3.l.google.com:19302',
+          'stun4.l.google.com:19302',
+        ],
+      },
+    ],
+  });
   let channelInstance: RTCDataChannel;
 
   peerConnection.onicecandidate = function(e) {
