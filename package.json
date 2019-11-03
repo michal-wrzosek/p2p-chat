@@ -1,10 +1,10 @@
 {
-  "name": "typescript-lib-boilerplate",
+  "name": "p2p-chat",
   "version": "1.0.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "repository": {
-    "url": "https://github.com/michal-wrzosek/typescript-lib-boilerplate",
+    "url": "https://github.com/michal-wrzosek/p2p-chat",
     "type": "git"
   },
   "license": "MIT",
