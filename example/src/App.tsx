@@ -22,6 +22,10 @@ enum Mode {
   SLAVE = 'SLAVE',
 };
 
+const Version = styled.div`
+  text-align: center;
+  font-size: 10px;
+`;
 const Wrapper = styled.div`
   padding: 12px;
   max-width: 400px;
@@ -150,6 +154,7 @@ const App: React.FC = () => {
       {mode && isReady &&
         <Chat messages={textMessages} sendMessage={handleChatSendMessage} />
       }
+      <Version>v0.0.2</Version>
     </Wrapper>
   );
 };
