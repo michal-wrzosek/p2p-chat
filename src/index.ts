@@ -1,3 +1,3 @@
-import { test } from './test';
+import { createPeerConnection } from './test';
 
-export { test };
+export { createPeerConnection };
