@@ -18,10 +18,16 @@ import { Chat } from './components/Chat/Chat';
 import { MessageType } from './types/MessageType';
 import { MESSAGE_SENDER } from './types/MessageSenderEnum';
 import { MESSAGE_TYPE } from './types/MessageTypeEnum';
+import { encrypt, generateKey } from './util/encryption';
 
 enum Mode {
   HOST = 'HOST',
   SLAVE = 'SLAVE',
+}
+
+type ConnectionDescription = {
+  description: string;
+  encryptionKey: string;
 };
 
 const Version = styled.div`
@@ -37,6 +43,7 @@ const Wrapper = styled.div`
 const App: React.FC = () => {
   const [mode, setMode] = React.useState<Mode | undefined>();
   const [isReady, setIsReady] = React.useState<boolean>(false);
+  const [encryptionKey, setEncryptionKey] = React.useState<string | undefined>();
   const [localDescription, setLocalDescription] = React.useState<string | undefined>();
   const [remoteDescription, setRemoteDescription] = React.useState<string>('');
   const [messages, setMessages] = React.useState<MessageType[]>([]);
@@ -46,42 +53,50 @@ const App: React.FC = () => {
   const onMessageReceived = (messageString: string) => {
     try {
       const message = JSON.parse(messageString) as MessageType;
-      setMessages((messages) => [...messages, message]);
+      setMessages(messages => [...messages, message]);
     } catch {}
-  }
+  };
 
   const onChannelOpen = () => setIsReady(true);
 
   const handleHostBtnClick = async () => {
     setMode(Mode.HOST);
-    const { localDescription, setAnswerDescription, sendMessage } = await createPeerConnection({ onMessageReceived, onChannelOpen });
+    const { localDescription, setAnswerDescription, sendMessage } = await createPeerConnection({
+      onMessageReceived,
+      onChannelOpen,
+    });
     sendMessageRef.current = sendMessage;
     setAnswerDescriptionRef.current = setAnswerDescription;
+    setEncryptionKey(generateKey());
     setLocalDescription(Base64.encode(localDescription));
-  }
+  };
 
   const handleAnswerBtnClick = () => {
     if (remoteDescription && setAnswerDescriptionRef.current) {
       setAnswerDescriptionRef.current(Base64.decode(remoteDescription));
     }
-  }
+  };
 
-  const handleRemoteDescriptionInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleRemoteDescriptionInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
     setRemoteDescription(event.target.value);
-  }
+  };
 
   const handleSlaveBtnClick = async () => {
     if (remoteDescription) {
       setMode(Mode.SLAVE);
-      const { localDescription, sendMessage } = await createPeerConnection({ remoteDescription: Base64.decode(remoteDescription), onMessageReceived, onChannelOpen });
+      const { localDescription, sendMessage } = await createPeerConnection({
+        remoteDescription: Base64.decode(remoteDescription),
+        onMessageReceived,
+        onChannelOpen,
+      });
       sendMessageRef.current = sendMessage;
       setLocalDescription(Base64.encode(localDescription));
     }
-  }
+  };
 
   const handleLocalDescriptionCopy = () => {
     localDescription && copy(localDescription);
-  }
+  };
 
   const handleChatSendMessage = (messageToSend: string) => {
     if (sendMessageRef.current) {
@@ -92,33 +107,49 @@ const App: React.FC = () => {
         payload: messageToSend,
       };
 
-      sendMessageRef.current(JSON.stringify(message));
-      setMessages((messages) => [...messages, {
-        ...message,
-        sender: MESSAGE_SENDER.ME,
-      }])
+      const messageString = JSON.stringify(message);
+      const encryptedMessageString = encrypt();
+      sendMessageRef.current();
+      setMessages(messages => [
+        ...messages,
+        {
+          ...message,
+          sender: MESSAGE_SENDER.ME,
+        },
+      ]);
     }
-  }
+  };
 
+  const localConnectionDescriptionCode = () =>
+    Base64.encode(JSON.stringify({ description: localDescription, encryptionKey } as ConnectionDescription));
   const textMessages = messages.filter(m => m.type === MESSAGE_TYPE.TEXT);
-  
+
   return (
     <Wrapper>
       <Typography.Title style={{ textAlign: 'center' }}>p2p chat</Typography.Title>
-      {!mode &&
+      {!mode && (
         <div>
           <Card>
-            <Button onClick={handleHostBtnClick} type="primary" block>New chat</Button>
+            <Button onClick={handleHostBtnClick} type="primary" block>
+              New chat
+            </Button>
           </Card>
           <Space size={24} />
           <Card>
-            <Input type="text" value={remoteDescription} onChange={handleRemoteDescriptionInputChange} placeholder="Paste connection code here..." />
+            <Input
+              type="text"
+              value={remoteDescription}
+              onChange={handleRemoteDescriptionInputChange}
+              placeholder="Paste connection code here..."
+            />
             <Space size={12} />
-            <Button onClick={handleSlaveBtnClick} type="primary" block>Join a chat</Button>
+            <Button onClick={handleSlaveBtnClick} type="primary" block>
+              Join a chat
+            </Button>
           </Card>
         </div>
-      }
-      {mode === Mode.HOST && !isReady &&
+      )}
+      {mode === Mode.HOST && !isReady && (
         <div>
           <Typography.Text>Send this code to other person:</Typography.Text>
           <Space size={4} />
@@ -140,8 +171,8 @@ const App: React.FC = () => {
             onSearch={handleAnswerBtnClick}
           />
         </div>
-      }
-      {mode === Mode.SLAVE && !isReady &&
+      )}
+      {mode === Mode.SLAVE && !isReady && (
         <div>
           <Typography.Text>Send this code to other person:</Typography.Text>
           <Space size={4} />
@@ -152,10 +183,8 @@ const App: React.FC = () => {
             onSearch={handleLocalDescriptionCopy}
           />
         </div>
-      }
-      {mode && isReady &&
-        <Chat messages={textMessages} sendMessage={handleChatSendMessage} />
-      }
+      )}
+      {mode && isReady && <Chat messages={textMessages} sendMessage={handleChatSendMessage} />}
       <Space size={24} />
       <Version>v1.0.0</Version>
     </Wrapper>

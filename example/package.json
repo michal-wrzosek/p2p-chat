@@ -6,6 +6,7 @@
   "dependencies": {
     "antd": "^3.24.3",
     "copy-to-clipboard": "^3.2.0",
+    "crypto-js": "^3.1.9-1",
     "js-base64": "^2.5.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -13,6 +14,7 @@
     "styled-components": "^4.4.1"
   },
   "devDependencies": {
+    "@types/crypto-js": "^3.1.43",
     "@types/jest": "^24.0.17",
     "@types/js-base64": "^2.3.1",
     "@types/node": "^12.7.0",

@@ -8,6 +8,7 @@
     "**/node_modules": true
   },
   "eslint.autoFixOnSave": true,
+  "eslint.workingDirectories": ["example", "src", "test"],
   "eslint.validate": [
     "javascript",
     "javascriptreact",
