@@ -1,4 +1,4 @@
-import { generateKey, encrypt, decrypt } from "./encryption";
+import { generateKey, encrypt, decrypt } from './encryption';
 
 describe('/util/encryption', () => {
   describe('generateKey()', () => {
@@ -29,5 +29,5 @@ describe('/util/encryption', () => {
       expect(message).not.toBe(encrypted);
       expect(decrypted).toBe(message);
     });
-  })
-})
+  });
+});

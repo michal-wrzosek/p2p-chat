@@ -1,38 +1,47 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Base64 } from 'js-base64';
-import copy from 'copy-to-clipboard';
 
-import { Input } from 'antd';
-import 'antd/es/input/style/css';
 import { Card } from 'antd';
 import 'antd/es/card/style/css';
-import { Button } from 'antd';
-import 'antd/es/button/style/css';
-import { Typography } from 'antd';
-import 'antd/es/typography/style/css';
 
-import { Space } from './components/Space/Space';
 import { createPeerConnection } from './typescript-lib';
 import { Chat } from './components/Chat/Chat';
 import { MessageType } from './types/MessageType';
 import { MESSAGE_SENDER } from './types/MessageSenderEnum';
 import { MESSAGE_TYPE } from './types/MessageTypeEnum';
-import { encrypt, generateKey } from './util/encryption';
+import { encrypt, generateKey, decrypt } from './util/encryption';
+import { HostOrSlave } from './components/HostOrSlave/HostOrSlave';
+import { ConnectionDescription } from './types/ConnectionDescription';
+import { Host } from './components/Host/Host';
+import { Slave } from './components/Slave/Slave';
+import { Space } from './components/Space/Space';
 
 enum Mode {
   HOST = 'HOST',
   SLAVE = 'SLAVE',
 }
 
-type ConnectionDescription = {
-  description: string;
-  encryptionKey: string;
-};
-
+const DetailsValue = styled.pre`
+  font-size: 10px;
+`;
+const DetailsLabel = styled.div`
+  font-size: 12px;
+  font-weight: 700;
+`;
+const DetailsWrapper = styled.div``;
 const Version = styled.div`
   text-align: center;
   font-size: 10px;
+`;
+const Subtitle = styled.div`
+  text-align: center;
+  font-size: 12px;
+`;
+const Title = styled.div`
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
 `;
 const Wrapper = styled.div`
   padding: 12px;
@@ -40,66 +49,76 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
+const iceServers: RTCIceServer[] = [
+  {
+    urls: 'stun:stun.l.google.com:19302',
+  },
+  {
+    urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+    username: 'webrtc',
+    credential: 'webrtc',
+  },
+];
+
 const App: React.FC = () => {
   const [mode, setMode] = React.useState<Mode | undefined>();
   const [isReady, setIsReady] = React.useState<boolean>(false);
   const [encryptionKey, setEncryptionKey] = React.useState<string | undefined>();
   const [localDescription, setLocalDescription] = React.useState<string | undefined>();
-  const [remoteDescription, setRemoteDescription] = React.useState<string>('');
+  const [encryptedMessages, setEncryptedMessages] = React.useState<string[]>([]);
   const [messages, setMessages] = React.useState<MessageType[]>([]);
   const setAnswerDescriptionRef = React.useRef<((answerDescription: string) => void) | undefined>();
   const sendMessageRef = React.useRef<((message: string) => void) | undefined>();
 
-  const onMessageReceived = (messageString: string) => {
-    try {
-      const message = JSON.parse(messageString) as MessageType;
-      setMessages(messages => [...messages, message]);
-    } catch {}
+  const onMessageReceived = (encryptionKey: string) => (messageString: string) => {
+    if (encryptionKey) {
+      try {
+        const decryptedMessageString = decrypt(messageString, encryptionKey);
+        const message = JSON.parse(decryptedMessageString) as MessageType;
+        setEncryptedMessages(m => [messageString, ...m]);
+        setMessages(messages => [...messages, message]);
+      } catch {}
+    }
   };
 
   const onChannelOpen = () => setIsReady(true);
 
-  const handleHostBtnClick = async () => {
-    setMode(Mode.HOST);
+  const handleHostSelection = async () => {
+    const encryptionKey = generateKey();
+    setEncryptionKey(encryptionKey);
     const { localDescription, setAnswerDescription, sendMessage } = await createPeerConnection({
-      onMessageReceived,
+      iceServers,
+      onMessageReceived: onMessageReceived(encryptionKey),
       onChannelOpen,
     });
+    setMode(Mode.HOST);
     sendMessageRef.current = sendMessage;
     setAnswerDescriptionRef.current = setAnswerDescription;
-    setEncryptionKey(generateKey());
     setLocalDescription(Base64.encode(localDescription));
   };
 
-  const handleAnswerBtnClick = () => {
-    if (remoteDescription && setAnswerDescriptionRef.current) {
-      setAnswerDescriptionRef.current(Base64.decode(remoteDescription));
+  const handleRemoteConnectionDescriptionSubmit = (remoteConnectionDescription: ConnectionDescription) => {
+    if (setAnswerDescriptionRef.current) {
+      setAnswerDescriptionRef.current(Base64.decode(remoteConnectionDescription.description));
     }
   };
 
-  const handleRemoteDescriptionInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    setRemoteDescription(event.target.value);
-  };
-
-  const handleSlaveBtnClick = async () => {
-    if (remoteDescription) {
-      setMode(Mode.SLAVE);
-      const { localDescription, sendMessage } = await createPeerConnection({
-        remoteDescription: Base64.decode(remoteDescription),
-        onMessageReceived,
-        onChannelOpen,
-      });
-      sendMessageRef.current = sendMessage;
-      setLocalDescription(Base64.encode(localDescription));
-    }
-  };
-
-  const handleLocalDescriptionCopy = () => {
-    localDescription && copy(localDescription);
+  const handleSlaveSelection = async (connectionDescription: ConnectionDescription) => {
+    const { encryptionKey } = connectionDescription;
+    setEncryptionKey(encryptionKey);
+    const { localDescription, sendMessage } = await createPeerConnection({
+      iceServers,
+      remoteDescription: Base64.decode(connectionDescription.description),
+      onMessageReceived: onMessageReceived(encryptionKey),
+      onChannelOpen,
+    });
+    setMode(Mode.SLAVE);
+    sendMessageRef.current = sendMessage;
+    setLocalDescription(Base64.encode(localDescription));
   };
 
   const handleChatSendMessage = (messageToSend: string) => {
-    if (sendMessageRef.current) {
+    if (sendMessageRef.current && encryptionKey) {
       const message: MessageType = {
         id: Math.random().toFixed(10),
         sender: MESSAGE_SENDER.STRANGER,
@@ -108,8 +127,9 @@ const App: React.FC = () => {
       };
 
       const messageString = JSON.stringify(message);
-      const encryptedMessageString = encrypt();
-      sendMessageRef.current();
+      const encryptedMessageString = encrypt(messageString, encryptionKey);
+      sendMessageRef.current(encryptedMessageString);
+      setEncryptedMessages(m => [encryptedMessageString, ...m]);
       setMessages(messages => [
         ...messages,
         {
@@ -120,73 +140,40 @@ const App: React.FC = () => {
     }
   };
 
-  const localConnectionDescriptionCode = () =>
-    Base64.encode(JSON.stringify({ description: localDescription, encryptionKey } as ConnectionDescription));
+  const localConnectionDescription = {
+    description: localDescription as string,
+    encryptionKey: encryptionKey as string,
+  } as ConnectionDescription;
   const textMessages = messages.filter(m => m.type === MESSAGE_TYPE.TEXT);
 
   return (
     <Wrapper>
-      <Typography.Title style={{ textAlign: 'center' }}>p2p chat</Typography.Title>
-      {!mode && (
-        <div>
-          <Card>
-            <Button onClick={handleHostBtnClick} type="primary" block>
-              New chat
-            </Button>
-          </Card>
-          <Space size={24} />
-          <Card>
-            <Input
-              type="text"
-              value={remoteDescription}
-              onChange={handleRemoteDescriptionInputChange}
-              placeholder="Paste connection code here..."
-            />
-            <Space size={12} />
-            <Button onClick={handleSlaveBtnClick} type="primary" block>
-              Join a chat
-            </Button>
-          </Card>
-        </div>
-      )}
+      <Title style={{ textAlign: 'center' }}>pitu-pitu</Title>
+      <Subtitle style={{ textAlign: 'center' }}>p2p chat on WebRTC with additional AES256 encryption</Subtitle>
+      <Space size={24} />
+      {!mode && <HostOrSlave onHost={handleHostSelection} onSlave={handleSlaveSelection} />}
       {mode === Mode.HOST && !isReady && (
-        <div>
-          <Typography.Text>Send this code to other person:</Typography.Text>
-          <Space size={4} />
-          <Input.Search
-            type="text"
-            value={localDescription ? localDescription : 'preparing connection...'}
-            enterButton="Copy to clipboard"
-            onSearch={handleLocalDescriptionCopy}
-          />
-          <Space size={24} />
-          <Typography.Text>Code from your buddy:</Typography.Text>
-          <Space size={4} />
-          <Input.Search
-            type="text"
-            value={remoteDescription}
-            onChange={handleRemoteDescriptionInputChange}
-            placeholder="Paste an answer code"
-            enterButton="Connect"
-            onSearch={handleAnswerBtnClick}
-          />
-        </div>
+        <Host connectionDescription={localConnectionDescription} onSubmit={handleRemoteConnectionDescriptionSubmit} />
       )}
-      {mode === Mode.SLAVE && !isReady && (
-        <div>
-          <Typography.Text>Send this code to other person:</Typography.Text>
-          <Space size={4} />
-          <Input.Search
-            type="text"
-            value={localDescription ? localDescription : 'preparing connection...'}
-            enterButton="Copy to clipboard"
-            onSearch={handleLocalDescriptionCopy}
-          />
-        </div>
-      )}
+      {mode === Mode.SLAVE && !isReady && <Slave connectionDescription={localConnectionDescription} />}
       {mode && isReady && <Chat messages={textMessages} sendMessage={handleChatSendMessage} />}
       <Space size={24} />
-      <Version>v1.0.0</Version>
+      <Version>v2.0.0</Version>
+      <Space size={64} />
+      <Card>
+        <DetailsWrapper>
+          <DetailsLabel>ICE Servers used to establish connection:</DetailsLabel>
+          <DetailsValue>{JSON.stringify(iceServers, null, 2)}</DetailsValue>
+        </DetailsWrapper>
+        <DetailsWrapper>
+          <DetailsLabel>Encryption key:</DetailsLabel>
+          <DetailsValue>{encryptionKey}</DetailsValue>
+        </DetailsWrapper>
+        <DetailsWrapper>
+          <DetailsLabel>Encrypted messages:</DetailsLabel>
+          <DetailsValue>{JSON.stringify(encryptedMessages, null, 2)}</DetailsValue>
+        </DetailsWrapper>
+      </Card>
     </Wrapper>
   );
 };

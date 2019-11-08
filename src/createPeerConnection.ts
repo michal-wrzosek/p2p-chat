@@ -2,6 +2,7 @@ const CHANNEL_LABEL = 'P2P_CHAT_CHANNEL_LABEL';
 
 export interface CreatePeerConnectionProps {
   remoteDescription?: string;
+  iceServers?: RTCIceServer[];
   onChannelOpen: () => any;
   onMessageReceived: (message: string) => any;
 }
@@ -14,20 +15,12 @@ export interface CreatePeerConnectionResponse {
 
 export function createPeerConnection({
   remoteDescription,
+  iceServers = [],
   onChannelOpen,
   onMessageReceived,
 }: CreatePeerConnectionProps): Promise<CreatePeerConnectionResponse> {
   const peerConnection = new RTCPeerConnection({
-    iceServers: [
-      {
-        urls: 'stun:stun.l.google.com:19302',
-      },
-      {
-        urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
-        username: 'webrtc',
-        credential: 'webrtc',
-      },
-    ],
+    iceServers,
   });
   let channelInstance: RTCDataChannel;
 
@@ -84,6 +77,7 @@ export function createPeerConnection({
   return new Promise(res => {
     peerConnection.onicecandidate = function(e) {
       if (e.candidate === null) {
+        console.log(peerConnection.localDescription);
         res({
           localDescription: JSON.stringify(peerConnection.localDescription),
           setAnswerDescription,

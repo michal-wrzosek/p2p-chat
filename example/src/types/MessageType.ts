@@ -1,5 +1,5 @@
-import { MESSAGE_SENDER } from "./MessageSenderEnum";
-import { MESSAGE_TYPE } from "./MessageTypeEnum";
+import { MESSAGE_SENDER } from './MessageSenderEnum';
+import { MESSAGE_TYPE } from './MessageTypeEnum';
 
 export type MessageType = {
   id: string;
