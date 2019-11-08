@@ -87,3 +87,7 @@ You can take a look how I implemented it in a demo chat app:
 
 ### Typescript
 This lib has types already built in. No need for @types/...
+
+---
+
+This package was bootstrapped with [typescript-lib-boilerplate](https://github.com/michal-wrzosek/typescript-lib-boilerplate)
