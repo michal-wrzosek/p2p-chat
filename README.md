@@ -1,16 +1,19 @@
 # p2p-chat
 ![npm](https://img.shields.io/npm/v/p2p-chat)
 
-Serverless peer to peer chat built on WebRTC.
+p2p chat on WebRTC with additional AES256 encryption and file sharing (no signaling server required)
 
 # [>Demo chat<](https://michal-wrzosek.github.io/p2p-chat/)
 The source code of demo chat is [here](https://github.com/michal-wrzosek/p2p-chat/tree/master/example/src)
 
-This is an example of how you can build p2p chat on WebRTC. It should work in both Chrome and Firefox. WebRTC needs STUN and TURN servers to successfully establish p2p connection over the network. In my demo app I used some publicly available endpoints:
- - stun:stun.l.google.com:19302
- - turn:turn.anyfirewall.com:443?transport=tcp (webrtc:webrtc)
+This is an example of how you can build p2p chat on WebRTC with no signaling servers. It should work in both Chrome and Firefox. WebRTC needs STUN and TURN servers to successfully establish p2p connection over the network. In my demo app I used some publicly available endpoints:
+- stun:stun.l.google.com:19302
+- turn:turn.anyfirewall.com:443?transport=tcp (webrtc:webrtc)
 
- Just to add some additional layer of security to my demo chat I added AES256 encryption to messages that are sent through WebRTC.
+Additional features:
+- AES256 encryption to all messages and files
+- file sharing
+- chat available as a single HTML file with no dependencies over the network so you can just save that file locally [index.html](https://michal-wrzosek.github.io/p2p-chat/index.html)
 
 # Library
 
