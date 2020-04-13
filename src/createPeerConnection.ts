@@ -25,11 +25,11 @@ export function createPeerConnection({
   });
   let channelInstance: RTCDataChannel;
 
-  peerConnection.oniceconnectionstatechange = () => {
-    if (peerConnection.iceConnectionState === 'failed' || peerConnection.iceConnectionState === 'disconnected') {
-      createOffer();
-    }
-  };
+  // peerConnection.oniceconnectionstatechange = () => {
+  //   if (peerConnection.iceConnectionState === 'failed' || peerConnection.iceConnectionState === 'disconnected') {
+  //     createOffer();
+  //   }
+  // };
 
   function setupChannelAsAHost() {
     try {
@@ -48,7 +48,7 @@ export function createPeerConnection({
   }
 
   async function createOffer() {
-    const description = await peerConnection.createOffer({ iceRestart: true });
+    const description = await peerConnection.createOffer();
     peerConnection.setLocalDescription(description);
   }
 

@@ -17,11 +17,11 @@ const iceServers: RTCIceServer[] = [
   {
     urls: 'stun:stun.l.google.com:19302',
   },
-  {
-    urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
-    username: 'webrtc',
-    credential: 'webrtc',
-  },
+  // {
+  //   urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+  //   username: 'webrtc',
+  //   credential: 'webrtc',
+  // },
 ];
 
 const peerConnectionSubject = new Subject<any>();
@@ -84,7 +84,7 @@ export const PeerConnectionProvider: FC = ({ children }) => {
         onMessageReceived,
         onChannelOpen,
       });
-
+      console.log('peerConnectionRef.current.localDescription', peerConnectionRef.current.localDescription);
       setLocalDescription(Base64.encode(peerConnectionRef.current.localDescription));
     },
     [mode, setMode, onMessageReceived, onChannelOpen, setLocalDescription],

@@ -60,6 +60,7 @@ const CardContainer = styled.div`
   height: 200px;
   align-items: stretch;
   border: 1px solid black;
+  border-top: none;
 
   > ${Card} {
     width: 100%;
