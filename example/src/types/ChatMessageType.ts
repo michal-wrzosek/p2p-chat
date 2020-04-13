@@ -1,7 +1,9 @@
 import { MESSAGE_SENDER } from './MessageSenderEnum';
 
-export type TextMessageType = {
+export type ChatMessageType = {
   id: string;
   sender: MESSAGE_SENDER;
-  payload: string;
+  timestamp: number;
+  text?: string;
+  fileId?: string;
 };

@@ -10,8 +10,8 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "./dist",
-    "target": "es5"
+    "target": "es5",
+    "lib": ["es2018", "dom"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"]
 }
