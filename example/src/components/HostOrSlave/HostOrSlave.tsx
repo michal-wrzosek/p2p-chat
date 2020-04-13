@@ -1,82 +1,133 @@
-import React from 'react';
+import React, { FC, useState, MouseEventHandler, ChangeEventHandler, FormEventHandler, memo } from 'react';
+import styled from 'styled-components';
 
-import { Input } from 'antd';
-import 'antd/es/input/style/css';
-import { Card } from 'antd';
-import 'antd/es/card/style/css';
-import { Button } from 'antd';
-import 'antd/es/button/style/css';
-import { Typography } from 'antd';
-import 'antd/es/typography/style/css';
-
-import { ConnectionDescription } from '../../types/ConnectionDescription';
-import { Space } from '../Space/Space';
 import { connectionDescriptionValidator } from '../../util/connectionDescriptionValidator';
 import { decode } from '../../util/connectionDescriptionEncoding';
+import { PageHeader } from '../PageHeader/PageHeader';
+import { Button } from '../Button/Button';
+import { TextArea } from '../TextArea/TextArea';
+import { useChat } from '../../module/useChat/useChat';
+import { ConnectionDescription } from '../../module/PeerConnection/PeerConnection';
 
-export interface HostOrSlaveProps {
-  onHost: () => any;
-  onSlave: (connectionDescription: ConnectionDescription) => any;
-}
+const InvitationTextArea = styled(TextArea)`
+  width: 100px;
+`;
+const HostButton = styled(Button)`
+  width: 100px;
+`;
+const SlaveButton = styled(Button)`
+  width: 100px;
+  margin-top: 4px;
+`;
+const ErrorMessage = styled.div``;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const Or = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 
-export const HostOrSlave: React.FC<HostOrSlaveProps> = ({ onHost, onSlave }) => {
+  > span {
+    transform: translate(0.5px, -1.5px);
+    line-height: 1;
+  }
+`;
+const CardContainer = styled.div`
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 200px;
+  align-items: stretch;
+  border: 1px solid black;
+
+  > ${Card} {
+    width: 100%;
+    border-left: 1px solid black;
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+`;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const HostOrSlave: FC = memo(function HostOrSlave() {
+  const { startAsHost, startAsSlave } = useChat();
   const [connectionDescription, setConnectionDescription] = React.useState<string>('');
-  const [error, setError] = React.useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  const handleHostBtnClick: React.MouseEventHandler<HTMLButtonElement> = event => {
+  const handleHostBtnClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    onHost();
+    startAsHost();
   };
 
-  const handleConnectionDescriptionInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+  const handleConnectionDescriptionInputChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setError('');
     setConnectionDescription(event.target.value);
   };
 
-  const handleSlaveFormSubmit: React.FormEventHandler = event => {
+  const handleSlaveFormSubmit: FormEventHandler = (event) => {
     event.preventDefault();
     event.stopPropagation();
 
     try {
       const connectionDescriptionObject = decode(connectionDescription);
       if (connectionDescriptionValidator(connectionDescriptionObject)) throw new Error();
-      onSlave(connectionDescriptionObject);
+      startAsSlave(connectionDescriptionObject as ConnectionDescription);
     } catch (error) {
       setError('Connection Description invalid!');
     }
   };
 
   return (
-    <React.Fragment>
-      <Card>
-        <Button onClick={handleHostBtnClick} type="primary" block>
-          New chat
-        </Button>
-      </Card>
-      <Space size={24} />
-      <Card>
-        <form onSubmit={handleSlaveFormSubmit}>
-          <Input
-            type="text"
-            value={connectionDescription}
-            onChange={handleConnectionDescriptionInputChange}
-            placeholder="Paste Connection Description here..."
-          />
-          {!!error && (
-            <React.Fragment>
-              <Space size={8} />
-              <Typography.Text>{error}</Typography.Text>
-            </React.Fragment>
-          )}
-          <Space size={12} />
-          <Button type="primary" htmlType="submit" block>
-            Join a chat
-          </Button>
-        </form>
-      </Card>
-    </React.Fragment>
+    <Container>
+      <PageHeader>Select how would you like to start a chat</PageHeader>
+      <CardContainer>
+        <Card>
+          <HostButton onClick={handleHostBtnClick}>New chat</HostButton>
+        </Card>
+        <Card>
+          <Form onSubmit={handleSlaveFormSubmit}>
+            <InvitationTextArea
+              value={connectionDescription}
+              onChange={handleConnectionDescriptionInputChange}
+              placeholder="Invitation code here..."
+            />
+            {!!error && <ErrorMessage>{error}</ErrorMessage>}
+            <SlaveButton type="submit">Join a chat</SlaveButton>
+          </Form>
+        </Card>
+        <Or>
+          <span>or</span>
+        </Or>
+      </CardContainer>
+    </Container>
   );
-};
+});

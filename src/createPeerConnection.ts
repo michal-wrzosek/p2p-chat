@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 const CHANNEL_LABEL = 'P2P_CHAT_CHANNEL_LABEL';
 
 export interface CreatePeerConnectionProps {
@@ -24,15 +25,21 @@ export function createPeerConnection({
   });
   let channelInstance: RTCDataChannel;
 
+  peerConnection.oniceconnectionstatechange = () => {
+    if (peerConnection.iceConnectionState === 'failed' || peerConnection.iceConnectionState === 'disconnected') {
+      createOffer();
+    }
+  };
+
   function setupChannelAsAHost() {
     try {
       channelInstance = peerConnection.createDataChannel(CHANNEL_LABEL);
 
-      channelInstance.onopen = function() {
+      channelInstance.onopen = function () {
         onChannelOpen();
       };
 
-      channelInstance.onmessage = function(event) {
+      channelInstance.onmessage = function (event) {
         onMessageReceived(event.data);
       };
     } catch (e) {
@@ -41,18 +48,18 @@ export function createPeerConnection({
   }
 
   async function createOffer() {
-    const description = await peerConnection.createOffer();
+    const description = await peerConnection.createOffer({ iceRestart: true });
     peerConnection.setLocalDescription(description);
   }
 
   function setupChannelAsASlave() {
-    peerConnection.ondatachannel = function({ channel }) {
+    peerConnection.ondatachannel = function ({ channel }) {
       channelInstance = channel;
-      channelInstance.onopen = function() {
+      channelInstance.onopen = function () {
         onChannelOpen();
       };
 
-      channelInstance.onmessage = function(event) {
+      channelInstance.onmessage = function (event) {
         onMessageReceived(event.data);
       };
     };
@@ -74,10 +81,10 @@ export function createPeerConnection({
     }
   }
 
-  return new Promise(res => {
-    peerConnection.onicecandidate = function(e) {
-      if (e.candidate === null) {
-        console.log(peerConnection.localDescription);
+  return new Promise((res) => {
+    peerConnection.onicecandidate = function (e) {
+      if (e.candidate === null && peerConnection.localDescription) {
+        peerConnection.localDescription.sdp.replace('b=AS:30', 'b=AS:1638400');
         res({
           localDescription: JSON.stringify(peerConnection.localDescription),
           setAnswerDescription,
