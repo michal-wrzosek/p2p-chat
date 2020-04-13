@@ -13,7 +13,7 @@ This is an example of how you can build p2p chat on WebRTC with no signaling ser
 Additional features:
 - AES256 encryption to all messages and files
 - file sharing
-- chat available as a single HTML file with no dependencies over the network so you can just save that file locally [index.html](https://github.com/michal-wrzosek/p2p-chat/blob/master/example/build/index.html)
+- chat available as a single HTML file with no dependencies over the network so you can just save that file locally [index.html](https://raw.githubusercontent.com/michal-wrzosek/p2p-chat/master/example/build/index.html)
 
 Since there's no signaling server in between, you have to send a WebRTC connection description manually to your friend :D Sounds funny but it works (like 70% of times - sometimes you have to try to connect one more time by reloading a chat)
 
