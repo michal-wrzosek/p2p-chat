@@ -3,7 +3,7 @@
 
 p2p chat on WebRTC with additional AES256 encryption and file sharing (no signaling server required)
 
-# [>Demo chat<](https://michal-wrzosek.github.io/p2p-chat/)
+# [>pitu-pitu chat<](https://michal-wrzosek.github.io/p2p-chat/)
 The source code of demo chat is [here](https://github.com/michal-wrzosek/p2p-chat/tree/master/example/src)
 
 This is an example of how you can build p2p chat on WebRTC with no signaling servers. It should work in both Chrome and Firefox. WebRTC needs STUN and TURN servers to successfully establish p2p connection over the network. In my demo app I used some publicly available endpoints:
@@ -14,6 +14,8 @@ Additional features:
 - AES256 encryption to all messages and files
 - file sharing
 - chat available as a single HTML file with no dependencies over the network so you can just save that file locally [index.html](https://michal-wrzosek.github.io/p2p-chat/index.html)
+
+Since there's no signaling server in between, you have to send a WebRTC connection description manually to your friend :D Sounds funny but it works (like 70% of times - sometimes you have to try to connect one more time by reloading a chat)
 
 # Library
 
